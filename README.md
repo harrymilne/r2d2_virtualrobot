@@ -5,3 +5,8 @@ Year 1 ALL Virtual Robot Project
 
 * python2.7
 * python-tk
+
+##Checklist
+* Scene Object
+* Obstacle Object
+* Robot Object
