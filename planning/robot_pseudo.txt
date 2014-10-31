@@ -1,0 +1,20 @@
+CLASS Robot
+
+    FUNC rotate(sensors)
+        
+        
+
+    FUNC move()
+        sensors = front_sensors()
+        IF (sensors[0] or sensors[1]) THEN
+            self.rotate(sensors)
+        INCREMENT x, y
+    
+    FUNC front_sensors()
+        CALCULATE left_sensor
+        CALCULATE right_sensor
+        RETURN left_sensor, right_sensor
+
+
+WHILE NOT goal_reached
+    
