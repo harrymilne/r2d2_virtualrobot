@@ -3,6 +3,8 @@
 from Tkinter import *
 from random import randint
 import time
+import Queue
+import threading
 
 class Scene(Frame): ##main canvas class (creating the window)
     def __init__(self, master=None, width=750, height=500): ##passing the Tk root + options
@@ -19,12 +21,21 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.populate()
         self.canvas.pack()
 
-    def populate(self, num=10): ##populate obstacles
+    def check_overlapping(self, x, y):
+        tested = []
+        for i in range(-50, 60, 50):
+            print i
+            tested.append(self.canvas.find_overlapping(x+i, y+i, x+i+100, y+i+100))
+
+        print tested    
+        return any(tested)
+
+    def populate(self, num=5): ##populate obstacles
         for sq in range(num): ##loop for how many obstacles wanted
             x = randint(0, self.width-100) ##random x1 + y1
             y = randint(0, self.height-100)
 
-            while self.canvas.find_overlapping(x, y, x+100, y+100):
+            while self.check_overlapping(x, y):
                 x = randint(0, self.width-100) ##random x1 + y1
                 y = randint(0, self.height-100)
             self.canvas.create_rectangle(x, y, x+100, y+100, ##create rectangle
