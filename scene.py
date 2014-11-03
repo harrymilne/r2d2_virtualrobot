@@ -31,21 +31,22 @@ class Scene(Frame): ##main canvas class (creating the window)
     def clear(self):
         self.canvas.clear()
 
-    def check_overlapping(self, x, y):
-        return self.canvas.find_overlapping(x-50, y-50, x+150, y+150)
+    def check_overlapping(self, x, y, size):
+        
+        return self.canvas.find_overlapping(x-20, y-20, x+size+20, y+size+20)
     
 
-    def populate(self, num=5): ##populate obstacles
+    def populate(self, num=15): ##populate obstacles
         self.add_robot()
         for sq in range(num): ##loop for how many obstacles wanted
-            x = randint(50, self.width-100) ##random x1 + y1
-            y = randint(50, self.height-100)
-
-            while self.check_overlapping(x, y): ##check x, y for existing object
-                x = randint(50, self.width-100) ##random x1 + y1
-                y = randint(50, self.height-100)
-
-            obst_id = self.canvas.create_rectangle(x, y, x+100, y+100, ##create rectangle
+            sq_size = randint(30, 100) ##random size
+            x = randint(20, self.width - sq_size - 20) ##random x1 + y1
+            y = randint(20, self.height - sq_size - 20)
+            while self.check_overlapping(x, y, sq_size): ##check x, y for existing object
+                sq_size = randint(30, 100) ##random size
+                x = randint(20, self.width - sq_size - 20) ##random x1 + y1
+                y = randint(20, self.height - sq_size - 20)
+            obst_id = self.canvas.create_rectangle(x, y, x + sq_size, y + sq_size,
                 outline="#f11", fill="#1f1", width=2)
             self.obstacles.append(obst_id)
 
@@ -59,7 +60,8 @@ class Scene(Frame): ##main canvas class (creating the window)
         t = turtle.RawTurtle(self.canvas)
         scr = t.getscreen()
         scr.setworldcoordinates(0, 500, 750, 0)
-        t.forward(5)
+        t.left(45)
+        t.forward(50)
         pass
 
 
