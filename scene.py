@@ -30,18 +30,19 @@ class Scene(Frame): ##main canvas class (creating the window)
 
     def check_overlapping(self, x, y):
         
-        return self.canvas.find_overlapping(x-50, y-50, x+150, y+150)
+        return self.canvas.find_overlapping(x-30, y-30, x+130, y+130)
     
 
-    def populate(self, num=5): ##populate obstacles
+    def populate(self, num=15): ##populate obstacles
         for sq in range(num): ##loop for how many obstacles wanted
-            x = randint(50, self.width-100) ##random x1 + y1
-            y = randint(50, self.height-100)
+            sq_size = randint(30, 100) ##random size
+            x = randint(30, self.width - sq_size - 20) ##random x1 + y1
+            y = randint(30, self.height - sq_size -20)
 
             while self.check_overlapping(x, y): ##check x, y for existing object
-                x = randint(50, self.width-100) ##random x1 + y1
-                y = randint(50, self.height-100)
-            self.canvas.create_rectangle(x, y, x+100, y+100, ##create rectangle
+                x = randint(20, self.width - sq_size - 20) ##random x1 + y1
+                y = randint(20, self.height - sq_size - 20)
+            self.canvas.create_rectangle(x, y, x + sq_size, y + sq_size, ##create rectangle
                 outline="#f11", fill="#1f1", width=2)
 
     def repopulate(self):
