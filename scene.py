@@ -19,6 +19,7 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.parent.config(menu=menubar)
         
         file_menu = Menu(menubar)
+        file_menu.add_command(label="Repopulate", command=self.repopulate)
         file_menu.add_command(label="Exit", command=self.on_exit)
         menubar.add_cascade(label="File", menu=file_menu)
         self.pack()
@@ -51,6 +52,11 @@ class Scene(Frame): ##main canvas class (creating the window)
                 y = randint(0, self.height-100)
             self.canvas.create_rectangle(x, y, x+100, y+100, ##create rectangle
                 outline="#f11", fill="#1f1", width=2)
+
+    def repopulate(self):
+        self.canvas.delete("all")
+        self.populate()
+        self.canvas.pack()
 
     def start_robot(self):
         ##
