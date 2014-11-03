@@ -40,6 +40,7 @@ class Scene(Frame): ##main canvas class (creating the window)
             y = randint(20, self.height - sq_size - 20)
 
             while self.check_overlapping(x, y, sq_size): ##check x, y for existing object
+                sq_size = randint(30, 100) ##random size
                 x = randint(20, self.width - sq_size - 20) ##random x1 + y1
                 y = randint(20, self.height - sq_size - 20)
             self.canvas.create_rectangle(x, y, x + sq_size, y + sq_size, ##create rectangle
