@@ -15,19 +15,30 @@ class Scene(Frame): ##main canvas class (creating the window)
 
 
         self.parent.title("R2D2 Virtual Robot") ##naming window
+        menubar = Menu(self.parent)
+        self.parent.config(menu=menubar)
+        
+        file_menu = Menu(menubar)
+        file_menu.add_command(label="Exit", command=self.on_exit)
+        menubar.add_cascade(label="File", menu=file_menu)
         self.pack()
 
         self.canvas = Canvas(self, width=width, height=height) ##init drawing canvas
         self.populate()
         self.canvas.pack()
 
+    def on_exit(self):
+        print "bye"
+        self.quit()
+
+    def clear(self):
+        self.canvas.clear()
+
     def check_overlapping(self, x, y):
         tested = []
         for i in range(-50, 60, 50):
-            print i
             tested.append(self.canvas.find_overlapping(x+i, y+i, x+i+100, y+i+100))
 
-        print tested    
         return any(tested)
 
     def populate(self, num=5): ##populate obstacles
