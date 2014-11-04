@@ -2,7 +2,9 @@
 
 from Tkinter import *
 from random import randint
-import turtle
+from turtle import RawTurtle
+
+from robot import Robot
 
 class Scene(Frame): ##main canvas class (creating the window)
     def __init__(self, master=None, width=750, height=500): ##passing the Tk root + options
@@ -11,6 +13,7 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.width = width ##keeping width + height for future reference in class
         self.height = height
         self.obstacles = []
+        self.robots = []
 
 
         self.parent.title("R2D2 Virtual Robot") ##naming window
@@ -27,6 +30,7 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.pack()
 
         self.populate()
+        self.master.after(500, self.process_robots)
         
     def clear(self):
         self.canvas.clear()
@@ -57,12 +61,11 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.canvas.pack()
 
     def add_robot(self): ##temp robot function
-        t = turtle.RawTurtle(self.canvas)
-        scr = t.getscreen()
-        scr.setworldcoordinates(0, 500, 750, 0)
-        t.left(45)
-        t.forward(50)
-        pass
+        self.robots.append(Robot(self))
+
+    def process_robots(self):
+        for robot in self.robots:
+            robot.process()
 
 
 class Obstacle:
