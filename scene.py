@@ -20,17 +20,18 @@ class Scene(Frame): ##main canvas class (creating the window)
         menubar = Menu(self.parent)
         self.parent.config(menu=menubar)
         
-        file_menu = Menu(menubar)
-        file_menu.add_command(label="Repopulate", command=self.repopulate)
-        file_menu.add_command(label="Exit", command=self.quit)
-        menubar.add_cascade(label="File", menu=file_menu)
+        self.file_menu = Menu(menubar)
+        self.file_menu.add_command(label="Add Robot", command=self.add_robot)
+        self.file_menu.add_command(label="Stop Robots", command=self.stop_robots)
+        self.file_menu.add_command(label="Repopulate", command=self.repopulate)
+        self.file_menu.add_command(label="Exit", command=master.quit)
+        menubar.add_cascade(label="File", menu=self.file_menu)
 
         self.canvas = Canvas(self, width=width, height=height) ##init drawing canvas
         self.canvas.pack()
         self.pack()
 
         self.populate()
-        self.master.after(500, self.process_robots)
         
     def clear(self):
         self.canvas.clear()
@@ -41,6 +42,12 @@ class Scene(Frame): ##main canvas class (creating the window)
 
     def populate(self, num=20): ##populate obstacles
         self.add_robot()
+        
+        x_gap = randint(self.width*0.3, self.width*0.6)
+        y_gap = randint(self.height*0.3, self.height*0.6)
+        obst_id = self.canvas.create_rectangle(self.width/2, -1, self.width/2+10, y_gap, fill="#000")
+        obst_id = self.canvas.create_rectangle(self.width/2, y_gap+100, self.width/2+10, self.height, fill="#000")
+
         for sq in range(num): ##loop for how many obstacles wanted
             sq_size = randint(30, 100) ##random size
             x = randint(20, self.width - sq_size - 20) ##random x1 + y1
@@ -53,10 +60,6 @@ class Scene(Frame): ##main canvas class (creating the window)
                 outline="#000", fill="#1f1", width=2)
             self.obstacles.append(obst_id)
 
-        x_gap = randint(self.width*0.3, self.width*0.6)
-        y_gap = randint(self.height*0.3, self.height*0.6)
-        obst_id = self.canvas.create_rectangle(self.width/2, -1, self.width/2+10, y_gap, fill="#000")
-        obst_id = self.canvas.create_rectangle(self.width/2, y_gap+100, self.width/2+10, self.height, fill="#000")
 
 
     def repopulate(self):
@@ -64,10 +67,19 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.canvas.delete("all")
         self.populate()
         self.canvas.pack()
-        self.master.after(500, self.process_robots())
+        self.process_robots()
 
     def add_robot(self): ##temp robot function
-        self.robots.append(Robot(self))
+        robot_id = len(self.robots)
+        if len(self.robots) < 2:
+            self.robots.append(Robot(self, robot_id))
+        if len(self.robots) == 2:
+            self.file_menu.entryconfig("Add Robot", state="disabled")
+        self.robots[-1].process()
+
+    def stop_robots(self):
+        for robot in self.robots:
+            robot.done = True
 
     def process_robots(self):
         for robot in self.robots:
