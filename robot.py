@@ -24,25 +24,26 @@ class Robot:
 
     def process(self):
 
-    ##sets variables for checking collision
+        ##sets variables for checking collision
         turtle_x = self.turtle.xcor()
         turtle_y = self.turtle.ycor()
+        turtle_heading = self.turtle.heading()
         ##variables used to check right
         xr = turtle_x + 15*math.cos(math.radians(self.turtle.heading()+1.5))
         yr = turtle_y + 15*math.sin(math.radians(self.turtle.heading()+1.5))
         ##variables used to check left
         xl = turtle_x + 15*math.cos(math.radians(self.turtle.heading()-1.5))
         yl = turtle_y + 15*math.sin(math.radians(self.turtle.heading()-1.5))
-    ##turns the robot at window boundries
+        ##turns the robot at window boundries
         if turtle_x - 10 < 0:
-            self.turtle.setheading(0)
+            self.turtle.setheading(turtle_heading+100)
         if turtle_x + 10 > 750:
-            self.turtle.setheading(180)
+            self.turtle.setheading(turtle_heading+100)
         if turtle_y - 10 < 0:
-            self.turtle.setheading(90)
+            self.turtle.setheading(turtle_heading+100)
         if turtle_y + 10 > 500:
-            self.turtle.setheading(270)
-    ##check collisions
+            self.turtle.setheading(turtle_heading+100)
+        ##check collisions
         if self.scene.canvas.find_overlapping(xl-1,yl-1,xl+1,yl+1):
             ##turn away
             self.turtle.left(10)
@@ -53,8 +54,5 @@ class Robot:
             ##else move forward
             self.turtle.forward(1)
         ##if goal not reached:
-        self.scene.master.after(1, self.process)
+        self.scene.master.after(2, self.process)
 
-
-
-    pass

@@ -36,11 +36,10 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.canvas.clear()
 
     def check_overlapping(self, x, y, size):
-        
         return self.canvas.find_overlapping(x-20, y-20, x+size+20, y+size+20)
     
 
-    def populate(self, num=15): ##populate obstacles
+    def populate(self, num=20): ##populate obstacles
         self.add_robot()
         for sq in range(num): ##loop for how many obstacles wanted
             sq_size = randint(30, 100) ##random size
@@ -51,14 +50,21 @@ class Scene(Frame): ##main canvas class (creating the window)
                 x = randint(20, self.width - sq_size - 20) ##random x1 + y1
                 y = randint(20, self.height - sq_size - 20)
             obst_id = self.canvas.create_rectangle(x, y, x + sq_size, y + sq_size,
-                outline="#f11", fill="#1f1", width=2)
+                outline="#000", fill="#1f1", width=2)
             self.obstacles.append(obst_id)
+
+        x_gap = randint(self.width*0.3, self.width*0.6)
+        y_gap = randint(self.height*0.3, self.height*0.6)
+        obst_id = self.canvas.create_rectangle(self.width/2, -1, self.width/2+10, y_gap, fill="#000")
+        obst_id = self.canvas.create_rectangle(self.width/2, y_gap+100, self.width/2+10, self.height, fill="#000")
 
 
     def repopulate(self):
+        self.robots = []
         self.canvas.delete("all")
         self.populate()
         self.canvas.pack()
+        self.master.after(500, self.process_robots())
 
     def add_robot(self): ##temp robot function
         self.robots.append(Robot(self))
@@ -67,9 +73,6 @@ class Scene(Frame): ##main canvas class (creating the window)
         for robot in self.robots:
             robot.process()
 
-
-class Obstacle:
-    pass
 
 if __name__ == "__main__":
     root = Tk()
