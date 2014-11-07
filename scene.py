@@ -71,9 +71,10 @@ class Scene(Frame): ##main canvas class (creating the window)
     def repopulate(self):
         self.robots = []
         self.canvas.delete("all")
-        self.populate()
         self.canvas.pack()
         self.reset_menu()
+        self.populate()
+        self.process_robots()
 
     def reset_menu(self):
         self.file_menu.entryconfig("Add Robot", state="normal")
