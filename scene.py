@@ -42,7 +42,7 @@ class Scene(Frame): ##main canvas class (creating the window)
         return self.canvas.find_overlapping(x-20, y-20, x+size+20, y+size+20)
     
 
-    def populate(self, num=20): ##populate obstacles
+    def populate(self, num=25): ##populate obstacles
         self.add_robot()
         
         x_gap = randint(self.width*0.3, self.width*0.6)
@@ -68,10 +68,11 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.canvas.delete("all")
         self.populate()
         self.canvas.pack()
+        self.reset_menu()
 
     def reset_menu(self):
-        self.file_menu.entryconfig("Add Robot", state="enabled")
-        self.file_menu.entryconfig("Stop Robots", state="enabled")
+        self.file_menu.entryconfig("Add Robot", state="normal")
+        self.file_menu.entryconfig("Stop Robots", state="normal")
 
     def add_robot(self): ##temp robot function
         robot_id = len(self.robots)
