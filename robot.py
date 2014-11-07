@@ -55,10 +55,15 @@ class Robot:
         if turtle_y + 10 > 500:
             self.turtle.setheading(360-t_heading)
         ##check collisions
-        if self.scene.canvas.find_overlapping(xl-1,yl-1,xl+1,yl+1):
+        left = self.scene.canvas.find_overlapping(xl-1,yl-1,xl+1,yl+1)
+        right = self.scene.canvas.find_overlapping(xr-1,yr-1,xr+1,yr+1)
+        if self.goal_id in left + right:
+            self.done = True
+            self.turtle.forward(15)
+        elif left:
             ##turn away
             self.turtle.left(10)
-        elif self.scene.canvas.find_overlapping(xr-1,yr-1,xr+1,yr+1):
+        elif right:
             ##turn away
             self.turtle.right(10)
         else:

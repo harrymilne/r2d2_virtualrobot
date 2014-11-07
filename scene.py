@@ -14,6 +14,7 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.height = height
         self.obstacles = []
         self.robots = []
+        self.goal_id = None
 
         self.obst_color = "#1f1"
 
@@ -34,6 +35,7 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.pack()
 
         self.populate()
+        self.process_robots()
         
     def clear(self):
         self.canvas.clear()
@@ -45,11 +47,11 @@ class Scene(Frame): ##main canvas class (creating the window)
     def populate(self, num=25): ##populate obstacles
         self.add_robot()
         
-        x_gap = randint(self.width*0.3, self.width*0.6)
         y_gap = randint(self.height*0.3, self.height*0.6)
         obst_id = self.canvas.create_rectangle(self.width/2-15, 25, self.width/2+15, y_gap, fill=self.obst_color)
-        obst_id = self.canvas.create_rectangle(self.width/2-15, y_gap+100, self.width/2+15, self.height-25, fill=self.obst_color)
+        obst_id = self.canvas.create_rectangle(self.width/2-15, y_gap+150, self.width/2+15, self.height-25, fill=self.obst_color)
 
+        goal = randint(0, num)
         for sq in range(num): ##loop for how many obstacles wanted
             sq_size = randint(30, 100) ##random size
             x = randint(20, self.width - sq_size - 20) ##random x1 + y1
@@ -58,7 +60,10 @@ class Scene(Frame): ##main canvas class (creating the window)
                 sq_size = randint(30, 100) ##random size
                 x = randint(20, self.width - sq_size - 20) ##random x1 + y1
                 y = randint(20, self.height - sq_size - 20)
-            obst_id = self.canvas.create_rectangle(x, y, x + sq_size, y + sq_size, fill=self.obst_color, width=1)
+            if sq == goal:
+                self.goal_id = self.canvas.create_rectangle(x, y, x + sq_size, y + sq_size, fill="#FFCC33", width=1)
+            else:
+                obst_id = self.canvas.create_rectangle(x, y, x + sq_size, y + sq_size, fill=self.obst_color, width=1)
             self.obstacles.append(obst_id)
 
 
@@ -76,11 +81,13 @@ class Scene(Frame): ##main canvas class (creating the window)
 
     def add_robot(self): ##temp robot function
         robot_id = len(self.robots)
-        if len(self.robots) < 2:
+        if robot_id < 2:
             self.robots.append(Robot(self, robot_id))
-        if len(self.robots) == 2:
+        if robot_id == 1:
+            self.robots[-1].goal_id = self.goal_id
+            self.robots[-1].process()
+        if robot_id == 2:
             self.file_menu.entryconfig("Add Robot", state="disabled")
-        self.robots[-1].process()
 
     def stop_robots(self):
         for robot in self.robots:
@@ -89,6 +96,7 @@ class Scene(Frame): ##main canvas class (creating the window)
 
     def process_robots(self):
         for robot in self.robots:
+            robot.goal_id = self.goal_id
             robot.process()
 
 
