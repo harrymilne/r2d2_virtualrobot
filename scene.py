@@ -15,6 +15,8 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.obstacles = []
         self.robots = []
 
+        self.obst_color = "#1f1"
+
 
         self.parent.title("R2D2 Virtual Robot") ##naming window
         menubar = Menu(self.parent)
@@ -45,8 +47,8 @@ class Scene(Frame): ##main canvas class (creating the window)
         
         x_gap = randint(self.width*0.3, self.width*0.6)
         y_gap = randint(self.height*0.3, self.height*0.6)
-        obst_id = self.canvas.create_rectangle(self.width/2, -1, self.width/2+10, y_gap, fill="#000")
-        obst_id = self.canvas.create_rectangle(self.width/2, y_gap+100, self.width/2+10, self.height, fill="#000")
+        obst_id = self.canvas.create_rectangle(self.width/2-15, 25, self.width/2+15, y_gap, fill=self.obst_color)
+        obst_id = self.canvas.create_rectangle(self.width/2-15, y_gap+100, self.width/2+15, self.height-25, fill=self.obst_color)
 
         for sq in range(num): ##loop for how many obstacles wanted
             sq_size = randint(30, 100) ##random size
@@ -56,8 +58,7 @@ class Scene(Frame): ##main canvas class (creating the window)
                 sq_size = randint(30, 100) ##random size
                 x = randint(20, self.width - sq_size - 20) ##random x1 + y1
                 y = randint(20, self.height - sq_size - 20)
-            obst_id = self.canvas.create_rectangle(x, y, x + sq_size, y + sq_size,
-                outline="#000", fill="#1f1", width=2)
+            obst_id = self.canvas.create_rectangle(x, y, x + sq_size, y + sq_size, fill=self.obst_color, width=1)
             self.obstacles.append(obst_id)
 
 
@@ -67,7 +68,10 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.canvas.delete("all")
         self.populate()
         self.canvas.pack()
-        self.process_robots()
+
+    def reset_menu(self):
+        self.file_menu.entryconfig("Add Robot", state="enabled")
+        self.file_menu.entryconfig("Stop Robots", state="enabled")
 
     def add_robot(self): ##temp robot function
         robot_id = len(self.robots)
@@ -80,6 +84,7 @@ class Scene(Frame): ##main canvas class (creating the window)
     def stop_robots(self):
         for robot in self.robots:
             robot.done = True
+        self.file_menu.entryconfig("Stop Robots", state="disabled")
 
     def process_robots(self):
         for robot in self.robots:
