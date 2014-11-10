@@ -39,11 +39,11 @@ class Robot:
         turtle_y = self.turtle.ycor()
         t_heading = self.turtle.heading()
         ##variables used to check right
-        xr = turtle_x + 15*math.cos(math.radians(self.turtle.heading()+1.5))
-        yr = turtle_y + 15*math.sin(math.radians(self.turtle.heading()+1.5))
+        xr = turtle_x + 15*math.cos(math.radians(self.turtle.heading()+30))
+        yr = turtle_y + 15*math.sin(math.radians(self.turtle.heading()+30))
         ##variables used to check left
-        xl = turtle_x + 15*math.cos(math.radians(self.turtle.heading()-1.5))
-        yl = turtle_y + 15*math.sin(math.radians(self.turtle.heading()-1.5))
+        xl = turtle_x + 15*math.cos(math.radians(self.turtle.heading()-30))
+        yl = turtle_y + 15*math.sin(math.radians(self.turtle.heading()-30))
         ##turns the robot at window boundries
         st_orient = [0, 90, 180, 270]
         if turtle_x - 10 < 0:
