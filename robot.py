@@ -9,10 +9,10 @@ class Robot:
     def __init__(self, scene, robot_id):
         self.robot_id = robot_id
         self.done = False
+        self.signal = None
 
         self.turtle = RawTurtle(scene.canvas)
         self.scene = scene
-        self.goal_reached = False
 
         scr = self.turtle.getscreen()
         scr.setworldcoordinates(0, scene.height, scene.width, 0)
@@ -71,6 +71,10 @@ class Robot:
             ##else move forward
             self.turtle.forward(5)
         ##if goal not reached:
-        if not self.done:
+        if self.signal:
+            if self.signal == "STOP":
+                self.signal = None
+                return
+        elif not self.done:
             self.scene.master.after(20, self.process)
 

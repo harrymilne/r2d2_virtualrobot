@@ -35,7 +35,7 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.pack()
 
         self.populate()
-        self.process_robots()
+        self.process_robot(0)
         
     def clear(self):
         self.canvas.clear()
@@ -54,12 +54,12 @@ class Scene(Frame): ##main canvas class (creating the window)
         goal = randint(0, num)
         for sq in range(num): ##loop for how many obstacles wanted
             sq_size = randint(30, 100) ##random size
-            x = randint(20, self.width - sq_size - 20) ##random x1 + y1
-            y = randint(20, self.height - sq_size - 20)
+            x = randint(30, self.width - sq_size - 30) ##random x1 + y1
+            y = randint(30, self.height - sq_size - 30)
             while self.check_overlapping(x, y, sq_size): ##check x, y for existing object
                 sq_size = randint(30, 100) ##random size
-                x = randint(20, self.width - sq_size - 20) ##random x1 + y1
-                y = randint(20, self.height - sq_size - 20)
+                x = randint(30, self.width - sq_size - 30) ##random x1 + y1
+                y = randint(30, self.height - sq_size - 30)
             if sq == goal:
                 self.goal_id = self.canvas.create_rectangle(x, y, x + sq_size, y + sq_size, fill="#FFCC33", width=1)
             else:
@@ -69,12 +69,13 @@ class Scene(Frame): ##main canvas class (creating the window)
 
 
     def repopulate(self):
+        self.stop_robots()
         self.robots = []
         self.canvas.delete("all")
         self.canvas.pack()
         self.reset_menu()
         self.populate()
-        self.process_robots()
+        self.process_robot(0)
 
     def reset_menu(self):
         self.file_menu.entryconfig("Add Robot", state="normal")
@@ -84,21 +85,19 @@ class Scene(Frame): ##main canvas class (creating the window)
         robot_id = len(self.robots)
         if robot_id < 2:
             self.robots.append(Robot(self, robot_id))
-        if robot_id == 1:
-            self.robots[-1].goal_id = self.goal_id
-            self.robots[-1].process()
+        if robot_id >= 1:
+            self.process_robot(robot_id)
         if len(self.robots) == 2:
             self.file_menu.entryconfig("Add Robot", state="disabled")
 
     def stop_robots(self):
         for robot in self.robots:
-            robot.done = True
+            robot.signal = "STOP"
         self.file_menu.entryconfig("Stop Robots", state="disabled")
 
-    def process_robots(self):
-        for robot in self.robots:
-            robot.goal_id = self.goal_id
-            robot.process()
+    def process_robot(self, r_id):
+        self.robots[r_id].goal_id = self.goal_id
+        self.robots[r_id].process()
 
 
 if __name__ == "__main__":
