@@ -46,13 +46,14 @@ class Robot:
         yl = turtle_y + 15*math.sin(math.radians(self.turtle.heading()-30))
         ##turns the robot at window boundries
         st_orient = [0, 90, 180, 270]
-        if turtle_x - 10 < 0:
+        bounce_d = 20
+        if turtle_x - bounce_d < 0:
             self.turtle.setheading(180-t_heading)
-        if turtle_x + 10 > 750:
+        if turtle_x + bounce_d > self.scene.width:
             self.turtle.setheading(180-t_heading)
-        if turtle_y - 10 < 0:
+        if turtle_y - bounce_d < 0:
             self.turtle.setheading(360-t_heading)
-        if turtle_y + 10 > 500:
+        if turtle_y + bounce_d > self.scene.height:
             self.turtle.setheading(360-t_heading)
         ##check collisions
         left = self.scene.canvas.find_overlapping(xl-1,yl-1,xl+1,yl+1)

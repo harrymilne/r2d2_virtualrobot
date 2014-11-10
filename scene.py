@@ -87,7 +87,7 @@ class Scene(Frame): ##main canvas class (creating the window)
         if robot_id == 1:
             self.robots[-1].goal_id = self.goal_id
             self.robots[-1].process()
-        if robot_id == 2:
+        if len(self.robots) == 2:
             self.file_menu.entryconfig("Add Robot", state="disabled")
 
     def stop_robots(self):
