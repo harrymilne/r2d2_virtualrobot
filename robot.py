@@ -14,8 +14,8 @@ class Robot:
         self.turtle = RawTurtle(scene.canvas)
         self.scene = scene
 
-        scr = self.turtle.getscreen()
-        scr.setworldcoordinates(0, scene.height, scene.width, 0)
+        self.scr = self.turtle.getscreen()
+        self.scr.setworldcoordinates(0, scene.height, scene.width, 0)
 
         self.turtle.penup()
         self.reset()
@@ -60,7 +60,6 @@ class Robot:
         right = self.scene.canvas.find_overlapping(xr-1,yr-1,xr+1,yr+1)
         if self.goal_id in left + right:
             self.done = True
-            self.turtle.forward(15)
         elif left:
             ##turn away
             self.turtle.left(10)

@@ -15,6 +15,7 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.obstacles = []
         self.robots = []
         self.goal_id = None
+        self.traffic_state = None
 
         self.obst_color = "#1f1"
 
@@ -26,23 +27,22 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.file_menu = Menu(menubar)
         self.file_menu.add_command(label="Add Robot", command=self.add_robot)
         self.file_menu.add_command(label="Stop Robots", command=self.stop_robots)
+        self.file_menu.add_command(label="Start Traffic Lights", command=self.start_traffic)
+        self.file_menu.add_command(label="Stop Traffic Lights", command=self.stop_traffic)
         self.file_menu.add_command(label="Repopulate", command=self.repopulate)
         self.file_menu.add_command(label="Exit", command=master.quit)
         menubar.add_cascade(label="File", menu=self.file_menu)
 
-        self.canvas = Canvas(self, width=width, height=height) ##init drawing canvas
+        self.canvas = Canvas(self, width=width, height=height, bg="black") ##init drawing canvas
         self.canvas.pack()
         self.pack()
 
         self.populate()
         self.process_robot(0)
-        
-    def clear(self):
-        self.canvas.clear()
+
 
     def check_overlapping(self, x, y, size):
         return self.canvas.find_overlapping(x-20, y-20, x+size+20, y+size+20)
-    
 
     def populate(self, num=25): ##populate obstacles
         self.add_robot()
@@ -51,7 +51,8 @@ class Scene(Frame): ##main canvas class (creating the window)
         obst_id = self.canvas.create_rectangle(self.width/2-15, 25, self.width/2+15, y_gap, fill=self.obst_color)
         obst_id = self.canvas.create_rectangle(self.width/2-15, y_gap+150, self.width/2+15, self.height-25, fill=self.obst_color)
 
-        goal = randint(0, num)
+        goal = randint(0, num-1)
+
         for sq in range(num): ##loop for how many obstacles wanted
             sq_size = randint(30, 100) ##random size
             x = randint(30, self.width - sq_size - 30) ##random x1 + y1
@@ -75,6 +76,8 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.canvas.pack()
         self.reset_menu()
         self.populate()
+        for robot in self.robots:
+            robot.scr.bgcolor("white")
         self.process_robot(0)
 
     def reset_menu(self):
@@ -98,6 +101,49 @@ class Scene(Frame): ##main canvas class (creating the window)
     def process_robot(self, r_id):
         self.robots[r_id].goal_id = self.goal_id
         self.robots[r_id].process()
+
+    def start_traffic(self):
+        #self.traffic_state = None
+        if not self.traffic_state:
+            self.toggle_traffic()
+        self.file_menu.entryconfig("Add Robot", state="disabled")
+
+
+    def toggle_traffic(self):
+        if self.traffic_state == "go":
+            for robot in self.robots:
+                robot.signal = "STOP"
+                robot.scr.bgcolor("red")
+            self.traffic_state = "stop"
+            print("stopping")
+        elif self.traffic_state == "stop":
+            for robot in self.robots:
+                robot.process()
+                robot.scr.bgcolor("green")
+            self.traffic_state = "go"
+            print("starting")
+        if not self.traffic_state:
+            for robot in self.robots:
+                robot.signal = "STOP"
+                robot.scr.bgcolor("red")
+            self.traffic_state = "stop"
+            print("stopping")
+        rand_sec = randint(2,5)*1000
+        print rand_sec
+        if not self.traffic_state == "cancel":
+            self.master.after(rand_sec, self.start_traffic)
+        else:
+            for robot in self.robots:
+                robot.scr.bgcolor("white")
+            if self.traffic_state == "stop":
+                for robot in self.robots:
+                    robot.process()
+
+
+
+    def stop_traffic(self):
+        self.traffic_state = "cancel"
+
 
 
 if __name__ == "__main__":
