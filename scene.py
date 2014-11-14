@@ -18,7 +18,7 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.traffic_state = None
         self.robot_stopped = None
 
-        self.obst_color = "#1f1"
+        self.obst_color = "#009999"
 
 
         self.parent.title("R2D2 Virtual Robot") ##naming window
