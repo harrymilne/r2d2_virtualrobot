@@ -16,6 +16,7 @@ class Scene(Frame): ##main canvas class (creating the window)
         self.robots = []
         self.goal_id = None
         self.traffic_state = None
+        self.robot_stopped = None
 
         self.obst_color = "#1f1"
 
@@ -131,17 +132,20 @@ class Scene(Frame): ##main canvas class (creating the window)
         rand_sec = randint(2,5)*1000
         print rand_sec
         if not self.traffic_state == "cancel":
-            self.master.after(rand_sec, self.start_traffic)
+            self.master.after(rand_sec, self.toggle_traffic)
         else:
             for robot in self.robots:
                 robot.scr.bgcolor("white")
-            if self.traffic_state == "stop":
+            if self.robot_stopped == "YES":
                 for robot in self.robots:
                     robot.process()
+                self.robot_stopped = None
 
 
 
     def stop_traffic(self):
+        if self.traffic_state == "stop":
+            self.robot_stopped = "YES"
         self.traffic_state = "cancel"
 
 
@@ -150,3 +154,4 @@ if __name__ == "__main__":
     root = Tk()
     sc = Scene(master=root)
     root.mainloop()
+
